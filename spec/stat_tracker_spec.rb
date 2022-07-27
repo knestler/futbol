@@ -24,7 +24,6 @@ describe StatTracker do
       expect(StatTracker.from_csv(@locations)).to be_an_instance_of(StatTracker)
     end
 
-
     it "read csv files" do
       expect(@stat_tracker.games).to eq(CSV.table(@game_path))
       expect(@stat_tracker.teams).to eq(CSV.table(@team_path))
@@ -34,13 +33,6 @@ describe StatTracker do
   end
 
   describe 'Game Statistics' do
-
-
-
-    it 'percentage_visitor_wins' do
-   #move to correct location
-        expect(@stat_tracker.percentage_visitor_wins).to eq(13.33)
-    end
 
     it "finds highest total score" do
       expect(@stat_tracker.highest_total_score).to eq(7)
@@ -52,10 +44,6 @@ describe StatTracker do
 
     it "finds highest total score" do
       expect(@stat_tracker.highest_total_score).to eq(7)
-    end
-        
-    it 'can return the lowest score' do 
-      expect(@stat_tracker.lowest_total_score).to eq(1)
     end
 
     it "tracks wins" do
@@ -70,6 +58,10 @@ describe StatTracker do
       expect(@stat_tracker.home_games).to eq(30)
     end
 
+    it 'percentage_visitor_wins' do
+        expect(@stat_tracker.percentage_visitor_wins).to eq(13.33)
+    end
+    
     it "tracks away games" do
       expect(@stat_tracker.away_games).to eq(30)
     end
