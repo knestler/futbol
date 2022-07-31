@@ -362,21 +362,21 @@ class StatTracker
 
   def wins_by_team(team_id) # List of every game that was a win for a team - helper method for issue #18
     # [[2013020252, 16], [2014030166, 16], [2016030151, 16], [2016030152, 16]]
-    wins = []
-    @games.each do |row|
-      if (row[:away_goals] > row[:home_goals] && row[:away_team_id] == team_id) ||
-        (row[:home_goals] < row[:away_goals] && row[:home_team_id] == team_id)
-        wins << [row[:game_id], team_id]
-      end
-    end
-    wins
+    # wins = []
+    # @games.each do |row|
+    #   if (row[:away_goals] > row[:home_goals] && row[:away_team_id] == team_id) ||
+    #     (row[:home_goals] > row[:away_goals] && row[:home_team_id] == team_id)
+    #     wins << [row[:game_id], team_id]
+    #   end
+    # end
+    # wins
 
     # Option with full data set, but does not work with current dummy data
     # (this could be made dynamic for win or loss):
     #def results_by_team(team_id, win_loss)
-    # result_by_team = @game_teams.values_at(:game_id, :team_id, :result).find_all do |game|
-    #   game[1] == team_id && game[2] == "WIN" (win_loss).uppercase
-    # end
+    result_by_team = @game_teams.values_at(:game_id, :team_id, :result).find_all do |game|
+      game[1] == team_id && game[2] == "WIN"
+    end
   end
 
   def games_by_team(team_id) # List of every game a team played - helper method for issue #18
@@ -448,15 +448,14 @@ class StatTracker
 
   end
 
-  def most_goals_scored(team_id) #issue # 27
+  def most_goals_scored(team_id) #issue # 21
 
     array_of_goals_for_specified_team = []
 
     @games.each do |row|
-      array_of_goals_for_specified_team << row[:away_goals] if team_id == row[:away_team_id]
-      array_of_goals_for_specified_team << row[:home_goals] if team_id == row[:home_team_id]
+      array_of_goals_for_specified_team << row[:away_goals] if team_id.to_i == row[:away_team_id]
+      array_of_goals_for_specified_team << row[:home_goals] if team_id.to_i == row[:home_team_id]
     end
-
     array_of_goals_for_specified_team.max()
   end
 
