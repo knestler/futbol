@@ -25,7 +25,7 @@ class League < DetailsLoader
     scores_by_team_id(*game_type).each do |team, scores|
       next if scores.count ==0
       average = scores.sum/scores.count
-      average_scores[team] = average.round(1)
+      average_scores[team] = average.round(2)
     end
     average_scores
   end

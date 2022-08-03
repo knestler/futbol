@@ -30,6 +30,13 @@ describe 'Team Class initializes' do
     expect(@team_stats.game_teams).to eq(CSV.table(@game_teams_path))
   end
 
-  
-    
+  it 'can determine number of rival wins' do
+      expect(@stat_tracker.rival_wins("19")).to be_a Hash
+    end
+
+
+  it 'can determine number of rival games' do
+    expect(@stat_tracker.rival_game("19")).to be_a Hash
   end
+    
+end
