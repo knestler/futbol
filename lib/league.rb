@@ -10,7 +10,7 @@ class League < DetailsLoader
     @teams[:teamname].count
   end
 
-  def best_offense #issue # 11 - Fail Wrong team returning
+  def best_offense #issue # 11 
     max_average = average_scores_by_team_id("home", "away").values.max
     team_by_id[average_scores_by_team_id("home", "away").key(max_average)]
   end
@@ -25,7 +25,7 @@ class League < DetailsLoader
     scores_by_team_id(*game_type).each do |team, scores|
       next if scores.count ==0
       average = scores.sum/scores.count
-      average_scores[team] = average.round(1)
+      average_scores[team] = average.round(2)
     end
     average_scores
   end
