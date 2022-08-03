@@ -43,15 +43,13 @@ class League < DetailsLoader
       team_ids_hash[row[:away_team_id]][:count_of_away_games_played] += 1
     end
 
-    averages_hash = {}
+      averages_hash = {}
+      team_ids_hash.keys.each do |teamid|
+        averages_hash[teamid] = (team_ids_hash[teamid][:sum_away_goals]).to_f / (team_ids_hash[teamid][:count_of_away_games_played])
+      end
 
-    team_ids_hash.keys.each do |teamid|
-      averages_hash[teamid] = (team_ids_hash[teamid][:sum_away_goals]).to_f / (team_ids_hash[teamid][:count_of_away_games_played])
-    end
-
-    visitor_with_highest_score_array = averages_hash.max_by{|k,v| v}
-
-    visitor_team_name_with_highest_avg_score = team_by_id[visitor_with_highest_score_array[0]]
+      visitor_with_highest_score_array = averages_hash.max_by{|k,v| v}
+      visitor_team_name_with_highest_avg_score = team_by_id[visitor_with_highest_score_array[0]]
   end
 
   def scores_by_team_id(*game_type) #helper method for issue #14
