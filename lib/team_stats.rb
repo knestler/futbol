@@ -116,8 +116,8 @@ class Team < DetailsLoader
     @games.each { |row|
       rivals_wins << row[:home_team_id] if (row[:away_team_id] == team_id.to_i) && (row[:away_goals] < row[:home_goals])
       rivals_wins << row[:away_team_id] if (row[:home_team_id] == team_id.to_i) && (row[:home_goals] < row[:away_goals])}
-      rivals_wins_hash = rivals_wins.tally
-      rivals_wins_hash
+    rivals_wins_hash = rivals_wins.tally
+    rivals_wins_hash
   end
 
   def rival_game(team_id) 
