@@ -9,13 +9,4 @@ class CsvLoader
     @teams = teams
     @game_teams = game_teams
   end
-
-
-  # def self.read_csv(locations)
-  #   games = CSV.table(locations[:games])
-  #   teams = CSV.table(locations[:teams])
-  #   game_teams = CSV.table(locations[:game_teams])
-  #   CsvLoader.new(games, teams, game_teams)
-  # end
-
 end
