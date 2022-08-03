@@ -3,7 +3,6 @@ class League < DetailsLoader
 
   def initialize(games, teams, game_teams)
     super(games, teams, game_teams)
-    @details = DetailsLoader.new(games, teams, game_teams)
   end
 
   def count_of_teams
@@ -50,13 +49,13 @@ class League < DetailsLoader
   end
 
   def scores_by_team_id(*game_type)
-  scores_by_team_id = {}
+    scores_by_team_id = {}
     scores_by_game_type = @game_teams.values_at(:team_id, :hoa, :goals).find_all do |game|
     game[1] == game_type[0] || game_type[1]
-  end
+    end
 
-  @game_teams[:team_id].each {|id| scores_by_team_id[id] = []}
-  scores_by_game_type.each {|game|scores_by_team_id[game[0]] << game[2].to_f}
+    @game_teams[:team_id].each {|id| scores_by_team_id[id] = []}
+    scores_by_game_type.each {|game|scores_by_team_id[game[0]] << game[2].to_f}
     scores_by_team_id
   end
 

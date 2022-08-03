@@ -5,7 +5,6 @@ class SeasonStats < DetailsLoader
 
   def initialize(games, teams, game_teams)
     super(games, teams, game_teams)
-    @details = DetailsLoader.new(games, teams, game_teams)
   end
 
   def winningest_coach(season) #issue # 17 - FAIL wrong name returns

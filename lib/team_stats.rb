@@ -3,7 +3,6 @@ class Team < DetailsLoader
 
    def initialize(games, teams, game_teams)
     super(games, teams, game_teams)
-    @details = DetailsLoader.new(games, teams, game_teams)
   end
 
   def team_info(team_id) #issue # 23 - Pass
@@ -29,7 +28,7 @@ class Team < DetailsLoader
           if win_count == 0
             percentage = 0.0
           else
-            percentage = ((win_count/game_count.to_f) * 100).round(1) 
+            percentage = ((win_count/game_count.to_f) * 100).round(1)
           end
           win_percentage[game_season] = percentage
         end } }
@@ -48,7 +47,7 @@ class Team < DetailsLoader
     team_games_by_season = Hash.new{0}
     games_by_season.each { |season, games|
       games_by_team(team_id).each { |result_data|
-        team_games_by_season[season] += 1.0 if games.include?(result_data[0])  
+        team_games_by_season[season] += 1.0 if games.include?(result_data[0])
         team_games_by_season[season] = 0.0 if team_games_by_season[season] == 0 } }
     team_games_by_season
   end
@@ -135,7 +134,7 @@ class Team < DetailsLoader
     rival_opp_games = rival_game(team_id)
     rival_opp_games.each { | rogk, rogv |
       rival_opp_wins.each { | rowk, rowv |
-       rival_opp.merge!("#{rowk}" => (rowv.to_f / rogv.to_f)) if rogk == rowk 
+       rival_opp.merge!("#{rowk}" => (rowv.to_f / rogv.to_f)) if rogk == rowk
        rival_opp[rogk.to_s] = 0.0 if rival_opp_wins[rogk].nil? } }
     rival_opp.each{|k, v| return team_by_id[k.to_i] if v == rival_opp.values.max}
   end

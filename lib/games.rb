@@ -3,7 +3,6 @@ class Games < DetailsLoader
 
   def initialize(games, teams, game_teams)
     super(games, teams, game_teams)
-    @details = DetailsLoader.new(games, teams, game_teams)
   end
 
   def highest_total_score
@@ -13,7 +12,6 @@ class Games < DetailsLoader
   def lowest_total_score
     total_scores_by_game.min
   end
-
 
   def total_scores_by_game
     @games.values_at(:away_goals, :home_goals).map do |game|
