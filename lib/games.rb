@@ -24,8 +24,8 @@ class Games < DetailsLoader
   end
 
   def home_wins
-  home_win = 0.0
-  @game_teams.values_at(:result, :hoa).flat_map {|row| home_win += 1 if row == ["WIN", "home"]}; home_win
+    home_win = 0.0
+    @game_teams.values_at(:result, :hoa).flat_map {|row| home_win += 1 if row == ["WIN", "home"]}; home_win
   end
 
   def home_games

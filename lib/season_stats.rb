@@ -1,5 +1,6 @@
 require_relative 'details_loader'
 require_relative 'reusable'
+
 class SeasonStats < DetailsLoader
   include Reusables
 
@@ -7,9 +8,9 @@ class SeasonStats < DetailsLoader
     super(games, teams, game_teams)
   end
 
-  def winningest_coach(season)
-   highest_percent_wins = team_win_percent_by_season[season.to_i].max_by {|stat| stat[:win_perc]}
-   coach_by_team_id[highest_percent_wins[:team_id]][season.to_i].sample
+  def winningest_coach(season) 
+    highest_percent_wins = team_win_percent_by_season[season.to_i].max_by {|stat| stat[:win_perc]}
+    coach_by_team_id[highest_percent_wins[:team_id]][season.to_i].sample
   end
 
   def worst_coach(season)
@@ -17,13 +18,13 @@ class SeasonStats < DetailsLoader
     coach_by_team_id[lowest_percent_wins[:team_id]][season.to_i].sample
   end
 
-  def game_teams_for_game_id(game_id)
-    @game_teams.find_all do |game_team|
+  def game_teams_for_game_id(game_id) 
+    @game_teams.find_all do |game_team| 
       game_team[:game_id] == game_id
     end
   end
 
-  def total_team_shots_and_goals
+  def total_team_shots_and_goals 
     games_by_season.transform_values do |game_ids|
       team_totals_for_season = {}
       game_ids.each do |game_id|
@@ -40,8 +41,8 @@ class SeasonStats < DetailsLoader
   end
 
   def seasonal_team_accuracy(season_id)
-     total_team_shots_and_goals[season_id].transform_values do |team_shots_and_goals|
-     team_shots_and_goals["goals"].to_f / team_shots_and_goals["shots"]
+    total_team_shots_and_goals[season_id].transform_values do |team_shots_and_goals|
+      team_shots_and_goals["goals"].to_f / team_shots_and_goals["shots"]
     end
   end
 
@@ -49,21 +50,21 @@ class SeasonStats < DetailsLoader
     team_by_id[seasonal_team_accuracy(season_id.to_i).key(seasonal_team_accuracy(season_id.to_i).values.max)]
   end
 
-  def least_accurate_team(season)
+  def least_accurate_team(season) 
     games_by_season
     teams_with_goals_n_shots = Hash.new { |h,k| h[k] = [] }
 
     game_teams.each do |row|
       teams_with_goals_n_shots[row[:team_id]] = {"goals" => [], "shots" => []} if games_by_season[season.to_i].include?(row[:game_id])
-    end
+  end
 
     game_teams.each do |row|
       teams_with_goals_n_shots[row[:team_id]]["goals"] << row[:goals] and teams_with_goals_n_shots[row[:team_id]]["shots"] << row[:shots] if games_by_season[season.to_i].include?(row[:game_id])
-    end
+  end
 
     teams_with_goals_n_shots.keys.each do |team_id|
       teams_with_goals_n_shots[team_id] = teams_with_goals_n_shots[team_id]["goals"].sum.to_f / teams_with_goals_n_shots[team_id]["shots"].sum
-    end
+  end
 
     team_by_id[teams_with_goals_n_shots.key(teams_with_goals_n_shots.values.min)]
   end
