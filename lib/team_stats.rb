@@ -6,7 +6,7 @@ class Team < DetailsLoader
     @details = DetailsLoader.new(games, teams, game_teams)
   end
 
-  def team_info(team_id) #issue # 23 - Pass
+  def team_info(team_id) 
       info = { "team_id" => team_id, "franchise_id" => 0, "team_name" => 0, "abbreviation" => 0,"link" => 0}
       @teams.each do |row|
         info["franchise_id"] = row[:franchiseid].to_s if row[:team_id] == team_id.to_i
@@ -17,11 +17,11 @@ class Team < DetailsLoader
       info
   end
 
-  def best_season(team_id) #issue # 18 - PASS
+  def best_season(team_id)
     season_win_percentage(team_id.to_i).key(season_win_percentage(team_id.to_i).values.max).to_s
   end
 
-  def season_win_percentage(team_id) # Percentage of won games per season by team - helper method for issue #18
+  def season_win_percentage(team_id) 
     win_percentage = Hash.new
     number_team_games_per_season(team_id).each { |game_season, game_count|
       number_team_wins_per_season(team_id).each { |wins_season, win_count|
@@ -35,7 +35,7 @@ class Team < DetailsLoader
         end } }
     win_percentage
   end
-  def number_team_wins_per_season(team_id) # Count of number of games a team won each season -helper method for issue #18
+  def number_team_wins_per_season(team_id) 
     wins_by_season = Hash.new{0}
     games_by_season.each { |season, games|
       wins_by_team(team_id).each { |result_data|
@@ -44,7 +44,7 @@ class Team < DetailsLoader
     wins_by_season
   end
 
-  def number_team_games_per_season(team_id) # Count of number of games a team played each season - helper method for issue #18
+  def number_team_games_per_season(team_id) 
     team_games_by_season = Hash.new{0}
     games_by_season.each { |season, games|
       games_by_team(team_id).each { |result_data|
@@ -53,7 +53,7 @@ class Team < DetailsLoader
     team_games_by_season
   end
 
-  def games_by_season # All game_ids sorted by season - helper method for issue #18
+  def games_by_season 
     games_by_season = {}
     @games.values_at(:game_id, :season).each { |game|
       if games_by_season.include?(game[1])
@@ -64,25 +64,25 @@ class Team < DetailsLoader
     games_by_season
   end
 
-  def games_by_team(team_id) # List of every game a team played - helper method for issue #18
+  def games_by_team(team_id)
     @game_teams.filter_map {|row| [row[:game_id], team_id] if row[:team_id] == team_id}
   end
 
-  def wins_by_team(team_id) # List of every game that was a win for a team - helper method for issue #18
+  def wins_by_team(team_id) 
     result_by_team = @game_teams.values_at(:game_id, :team_id, :result).find_all do |game|
       game[1] == team_id && game[2] == "WIN"
     end
   end
 
-  def worst_season(team_id) #issue # 25 - Fail due to not written
+  def worst_season(team_id) 
     season_win_percentage(team_id.to_i).key(season_win_percentage(team_id.to_i).values.min).to_s
   end
 
-  def average_win_percentage(team_id) #issue # 20
+  def average_win_percentage(team_id) 
     (wins_by_team(team_id.to_i).count.to_f/games_by_team(team_id.to_i).count.to_f).round(2)
   end
 
-  def most_goals_scored(team_id) #issue # 27 pass
+  def most_goals_scored(team_id) 
     array_of_goals_for_specified_team = []
 
     @games.each { |row|
@@ -91,7 +91,7 @@ class Team < DetailsLoader
     array_of_goals_for_specified_team.max()
   end
 
-  def fewest_goals_scored(team_id) #issue # 28 - Fail due to not written
+  def fewest_goals_scored(team_id) 
     array_of_goals_for_specified_team = []
 
       @games.each { |row|
@@ -100,7 +100,7 @@ class Team < DetailsLoader
       array_of_goals_for_specified_team.min()
   end
 
-  def favorite_opponent(team_id)#issue # 29
+  def favorite_opponent(team_id)
     rival_opp = {}
     rival_opp_wins = rival_wins(team_id)
     rival_opp_games = rival_game(team_id)
@@ -111,7 +111,7 @@ class Team < DetailsLoader
     rival_opp.each { |k, v| return team_by_id[k.to_i] if v == rival_opp.values.min }
   end
 
-  def rival_wins(team_id) #helper for #24 and possibly fave opp
+  def rival_wins(team_id) 
     rivals_wins = []
     @games.each { |row|
      rivals_wins << row[:home_team_id] if (row[:away_team_id] == team_id.to_i) && (row[:away_goals] < row[:home_goals])
@@ -120,7 +120,7 @@ class Team < DetailsLoader
      rivals_wins_hash
   end
 
-  def rival_game(team_id) #helper for #24 and possibly fave opp
+  def rival_game(team_id) 
     rivals_games = []
     games.each { |row|
      rivals_games << row[:away_team_id] if row[:home_team_id] == team_id.to_i
@@ -129,7 +129,7 @@ class Team < DetailsLoader
     rivals_games_hash
   end
 
-  def rival(team_id) #issue 24 - Fail due to not written
+  def rival(team_id) 
     rival_opp = {}
     rival_opp_wins = rival_wins(team_id)
     rival_opp_games = rival_game(team_id)
