@@ -56,15 +56,15 @@ class SeasonStats < DetailsLoader
 
     game_teams.each do |row|
       teams_with_goals_n_shots[row[:team_id]] = {"goals" => [], "shots" => []} if games_by_season[season.to_i].include?(row[:game_id])
-  end
+    end
 
     game_teams.each do |row|
       teams_with_goals_n_shots[row[:team_id]]["goals"] << row[:goals] and teams_with_goals_n_shots[row[:team_id]]["shots"] << row[:shots] if games_by_season[season.to_i].include?(row[:game_id])
-  end
+    end
 
     teams_with_goals_n_shots.keys.each do |team_id|
       teams_with_goals_n_shots[team_id] = teams_with_goals_n_shots[team_id]["goals"].sum.to_f / teams_with_goals_n_shots[team_id]["shots"].sum
-  end
+    end
 
     team_by_id[teams_with_goals_n_shots.key(teams_with_goals_n_shots.values.min)]
   end
