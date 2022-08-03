@@ -16,7 +16,6 @@ describe Team do
     @team_stats = Team.new(@game, @team, @game_team)
   end 
 
-
 describe 'Team Class initializes' do 
   it 'Team Class exist' do 
     expect(@team_stats).to be_an_instance_of(Team)
@@ -33,7 +32,6 @@ describe 'Team Class initializes' do
   it 'can determine number of rival wins' do
       expect(@stat_tracker.rival_wins("19")).to be_a Hash
     end
-
 
   it 'can determine number of rival games' do
     expect(@stat_tracker.rival_game("19")).to be_a Hash
