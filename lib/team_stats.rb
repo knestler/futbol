@@ -139,4 +139,4 @@ class Team < DetailsLoader
        rival_opp[rogk.to_s] = 0.0 if rival_opp_wins[rogk].nil? } }
     rival_opp.each{|k, v| return team_by_id[k.to_i] if v == rival_opp.values.max}
   end
-end 
+end

@@ -1,25 +1,16 @@
-require 'csv'
 require_relative 'csv_loader.rb'
 require_relative 'games'
 require_relative 'league'
 require_relative 'season_stats'
 require_relative 'team_stats'
 
-
 class StatTracker
 
-  # attr_reader :games, :teams, :game_teams
   def initialize (games, teams, game_teams)
-    @gamezz = Games.new(games, teams, game_teams)
-    @league = League.new(games, teams, game_teams)
+    @game_stats = Games.new(games, teams, game_teams)
+    @league_stats = League.new(games, teams, game_teams)
     @season_stats = SeasonStats.new(games, teams, game_teams)
     @team_stat = Team.new(games, teams, game_teams)
-    # @csv = CsvLoader.new(games, teams, game_teams)
-    # @details = DetailsLoader.new.load_all
-    # @games = games
-    # @teams = teams
-    # @game_teams = game_teams
-    # require "pry"; binding.pry
   end
 
   def self.from_csv(locations)
@@ -29,582 +20,119 @@ class StatTracker
     StatTracker.new(games, teams, game_teams)
   end
 
-
- # Game Statistics
-
-  # def total_scores_by_game #helper for issue #2, #3, #6
-  #   @games.values_at(:away_goals, :home_goals).map do |game|
-  #     game[0] + game[1]
-  #   end
-  # end
-
-  def highest_total_score #issue #2
-    # require "pry"; binding.pry
-    @gamezz.highest_total_score
-    # total_scores_by_game.max
+  def highest_total_score
+    @game_stats.highest_total_score
   end
 
-  def lowest_total_score #issue #3
-    # total_scores_by_game.min
-    @gamezz.lowest_total_score
+  def lowest_total_score
+    @game_stats.lowest_total_score
   end
 
-  # def home_wins #helper for issue #4
-  #   # home_win = 0.0
-  #   # @game_teams.values_at(:result, :hoa).flat_map {|row| home_win += 1 if row == ["WIN", "home"]}; home_win
-  # end
-
-  # def home_games #helper for issue #4
-  #   home = 0.0
-  #   @game_teams[:hoa].map {|row| home += 1 if row == "home"}; home
-  # end
-
-  def percentage_home_wins #issue #4 - Need to make this test eq 0.99 not whole numbers
-    # percentage = (home_wins/home_games).round(2)
-    @gamezz.percentage_home_wins
+  def percentage_home_wins 
+    @game_stats.percentage_home_wins
   end
 
-  def percentage_visitor_wins #issue #5 - passed spec harness and dummy
-
-    # away_wins = 0
-    # away_games_played = 0
-
-    # game_teams.each do |row|
-    #   away_games_played += 1 if row[:hoa] == "away"
-    #   away_wins += 1  if (row[:hoa] == "away" && row[:result] == "WIN")
-    # end
-    # (away_wins.to_f / away_games_played).round(2)
-    @gamezz.percentage_visitor_wins
+  def percentage_visitor_wins
+    @game_stats.percentage_visitor_wins
   end
 
-  def percentage_ties #issue #6 - PASS
-    # ties = 0.0
-    # total_games = total_scores_by_game.count
-
-    # @games.values_at(:away_goals, :home_goals).each do |game|
-    #   ties += 1 if game[0] == game[1]
-    # end
-    # (ties/total_games).round(1)
-    @gamezz.percentage_ties
+  def percentage_ties 
+    @game_stats.percentage_ties
   end
 
-  def count_of_games_by_season #issue 7, also helper for #9 - - season(key) out put nees to be string
-    @gamezz.count_of_games_by_season
+  def count_of_games_by_season
+    @game_stats.count_of_games_by_season
   end
 
-  def average_goals_per_game #issue #8 - Need to make this test eq 0.99 not whole numbers
-    # (total_scores_by_game.sum/@games.count.to_f).round(2)
-    @gamezz.average_goals_per_game
+  def average_goals_per_game
+    @game_stats.average_goals_per_game
   end
 
-  def average_goals_by_season #issue #9 - Pass
-    # my_hash = Hash.new { |h,k| h[k] = [] }
-  @gamezz.average_goals_by_season
-      # count_of_games_by_season.each do |season, game_count|
-      #   my_hash[season] = []
-      #   game_sum_calc = []
-      #   games.each do |row|
-      #     game_sum_calc << (row[:away_goals] + row[:home_goals]) if row[:season] == season.to_i
-      #     #require 'pry';binding.pry
-      #     my_hash[season] = (game_sum_calc.sum / game_count.to_f).round(2)
-      #   end
-      # end
-      # my_hash
+  def average_goals_by_season
+    @game_stats.average_goals_by_season
   end
 
-  # def game_wins #Helper method not yet used
-  #   win = 0.0
-  #   @game_teams[:result].map {|row| win += 1 if row == "WIN"}; win
-  # end
-
-  # def game_losses #Helper method not yet used
-  #   loss = 0.0
-  #   @game_teams[:result].map {|row| loss += 1 if row == "LOSS"}; loss
-  # end
-
-  # def away_games #Helper method not yet used
-  #   away = 0.0
-  #   @game_teams[:hoa].map {|row| away += 1  if row == "away"}; away
-  # end
-
-
-  # League Statistics
-
-  def count_of_teams #issue # 10 - PASS
-    # @teams[:teamname].count
-    @league.count_of_teams
+  def count_of_teams
+    @league_stats.count_of_teams
   end
 
-  def best_offense #issue # 11 - Fail Wrong team returning
-    # max_average = average_scores_by_team_id("home", "away").values.max
-    # team_by_id[average_scores_by_team_id("home", "away").key(max_average)]
-    @league.best_offense
+  def best_offense 
+    @league_stats.best_offense
   end
 
-  def worst_offense #issue # 12 - PASS
-    # min_average = average_scores_by_team_id("home", "away").values.min
-    # team_by_id[average_scores_by_team_id("home", "away").key(min_average)]
-    @league.worst_offense
+  def worst_offense 
+    @league_stats.worst_offense
   end
 
-  def highest_scoring_visitor #issue # 13 - Pass
-    @league.highest_scoring_visitor
-      # away_team_ids_array = (@games[:away_team_id]).uniq.sort
-      #
-      # team_ids_hash = {}
-      # away_team_ids_array.each do |teamid|
-      #   team_ids_hash[teamid] = {sum_away_goals: 0, count_of_away_games_played: 0}
-      # end
-      #
-      # @games.each do |row|
-      #   team_ids_hash[row[:away_team_id]][:sum_away_goals] += row[:away_goals]
-      #   team_ids_hash[row[:away_team_id]][:count_of_away_games_played] += 1
-      # end
-      #
-      # averages_hash = {}
-      #
-      # team_ids_hash.keys.each do |teamid|
-      #   averages_hash[teamid] = (team_ids_hash[teamid][:sum_away_goals]).to_f / (team_ids_hash[teamid][:count_of_away_games_played])
-      # end
-      #
-      # visitor_with_highest_score_array = averages_hash.max_by{|k,v| v}
-      #
-      # visitor_team_name_with_highest_avg_score = team_by_id[visitor_with_highest_score_array[0]]
+  def highest_scoring_visitor
+    @league_stats.highest_scoring_visitor
   end
 
-  # def scores_by_team_id(*game_type) #helper method for issue #14
-  #   scores_by_team_id = {}
-  #     scores_by_game_type = @game_teams.values_at(:team_id, :hoa, :goals).find_all do |game|
-  #     game[1] == game_type[0] || game_type[1]
-  #   end
-
-  #   @game_teams[:team_id].each do |id|
-  #     scores_by_team_id[id] = []
-  #   end
-  #   scores_by_game_type.each do |game|
-  #     scores_by_team_id[game[0]] << game[2].to_f
-  #   end
-  #   scores_by_team_id
-  # end
-
-  # def team_by_id #helper method for issue #14
-  #   @teams.values_at(:team_id, :teamname).uniq.to_h
-  # end
-
-
-  # def average_scores_by_team_id(*game_type) #helper method for issue #14
-  #   average_scores= {}
-  #   scores_by_team_id(*game_type).each do |team, scores|
-  #     next if scores.count ==0
-  #     average = scores.sum/scores.count
-  #     average_scores[team] = average.round(1)
-  #   end
-  #   average_scores
-  # end
-
-  def highest_scoring_home_team #issue # 14 - PASS
-    # max_average = average_scores_by_team_id("home").values.max
-    # team_by_id[average_scores_by_team_id("home").key(max_average)]
-    @league.highest_scoring_home_team
+  def highest_scoring_home_team 
+    @league_stats.highest_scoring_home_team
   end
 
-  def lowest_scoring_visitor #issue # 15 - PASS
-    # lowest_average = average_scores_by_team_id("away").values.min
-    # team_by_id[average_scores_by_team_id("away").key(lowest_average)]
-    @league.lowest_scoring_visitor
+  def lowest_scoring_visitor
+    @league_stats.lowest_scoring_visitor
   end
 
-  def lowest_scoring_home_team #issue # 16 - Fail wrong team being returned
-    # min_average = average_scores_by_team_id("home").values.min
-    # team_by_id[average_scores_by_team_id("home").key(min_average)]
-    @league.lowest_scoring_home_team
+  def lowest_scoring_home_team 
+    @league_stats.lowest_scoring_home_team
   end
 
-
-  # Season Statistics
-
-  # def coach_by_team_id #Provides hash of coach names by team id - Helper method for issue #27
-  #   # Example hash: {3=>"John Tortorella", 6=>"Claude Julien",  5=>"Dan Bylsma",
-  #   coaches = Hash.new {|h, k| h[k] = {}}
-  #   games_by_season.each do |season, games|
-  #     @game_teams.each do |row|
-  #       if games.include?(row[:game_id])
-  #         if !coaches[row[:team_id]].keys.include?(season)
-  #           coaches[row[:team_id]][season] = [row[:head_coach]]
-  #         elsif !coaches[row[:team_id]][season].include?(row[:head_coach])
-  #           coaches[row[:team_id]][season] << row[:head_coach]
-  #         end
-  #       end
-  #     end
-  #   end
-  #   coaches
-  # end
-
-  # def team_win_percent_by_season # Provides hash of seasons with array of hashes for team id
-  #                                 #and win percentage for season - Helper for Issue #27
-  #   # Example hash: {20132014=> [{:team_id=>1, :win_perc=>50.0}, {:team_id=>4, :win_perc=>40.0}, {:team_id=>26, :win_perc=>100.0}
-  #   team_win_percent = Hash.new {0}
-  #   team_by_id.each do |id , team|
-  #       season_win_percentage(id).each do |season, win|
-  #         if number_team_games_per_season(id)[season] != (0.0 || 0)
-  #           if team_win_percent[season] == 0
-  #             team_win_percent[season] = [{team_id: id, win_perc: win}]
-  #           else
-  #             team_win_percent[season] << {team_id: id, win_perc: win}
-  #         end
-  #       end
-  #     end
-  #   end
-  #   team_win_percent
-  # end
-
-
-  def winningest_coach(season) #issue # 17 - FAIL wrong name returns
-   # Name of the Coach with the best win percentage for the season
-  #  highest_percent_wins = team_win_percent_by_season[season.to_i].max_by {|stat| stat[:win_perc]}
-  #  coach_by_team_id[highest_percent_wins[:team_id]][season.to_i].sample
+  def winningest_coach(season)
     @season_stats.winningest_coach(season)
   end
 
-  def worst_coach(season)#issue # 27 - FAIL 2/3 tests PASS - on fail it is providing diff team/name
-    # lowest_percent_wins = team_win_percent_by_season[season.to_i].min_by {|stat| stat[:win_perc]}
-    # coach_by_team_id[lowest_percent_wins[:team_id]][season.to_i].sample
+  def worst_coach(season)
     @season_stats.worst_coach(season)
   end
 
-  # def game_teams_for_game_id(game_id) #Helper method for issue #28, may be able to be used for other season stats
-  #   @game_teams.find_all do |game_team| #finds all stats for away and home team for a particular game
-  #     game_team[:game_id] == game_id
-  #   end
-
-  # end
-
-  # def total_team_shots_and_goals
-  #   # {3=>{"shots"=>38, "goals"=>8}, 6=>{"shots"=>76, "goals"=>24}
-  #   games_by_season.transform_values do |game_ids|
-  #     team_totals_for_season = {}
-  #     game_ids.each do |game_id|
-  #       game_teams_for_game_id(game_id).each do |game_team|
-  #         if team_totals_for_season[game_team[:team_id]].nil?
-  #           team_totals_for_season[game_team[:team_id]] = {"shots" => 0, "goals" => 0}
-  #         end
-  #         team_totals_for_season[game_team[:team_id]]["shots"] += game_team[:shots]
-  #         team_totals_for_season[game_team[:team_id]]["goals"] += game_team[:goals]
-  #       end
-  #     end
-  #     team_totals_for_season
-  #   end
-  # end #lines above gives total shots and total goals in a season for each team
-
-  # def seasonal_team_accuracy(season_id)
-  #    total_team_shots_and_goals[season_id].transform_values do |team_shots_and_goals|
-  #    team_shots_and_goals["goals"].to_f / team_shots_and_goals["shots"]
-  #   end
-  # end # Lines above gives accuracy ratio of team id for a given season
-
-  def most_accurate_team(season_id) #issue # 28 - NilClass Error on transform_values
+  def most_accurate_team(season_id)
     @season_stats.most_accurate_team(season_id)
-    # team_by_id[seasonal_team_accuracy(season_id.to_i).key(seasonal_team_accuracy(season_id.to_i).values.max)]
   end
 
-
-  # def goals_by_team(team_id) #helper for 29
-  #   goals = []
-  #     @game_teams.each do |row|
-  #       if (row[:team_id] == team_id)
-  #         goals << [row[:goals]]
-  #       end
-  #     end
-  #     goals.flatten.sum
-  #   end
-
-  # def shots_by_team(team_id) #helper for 29
-  # shots = []
-  #   @game_teams.each do |row|
-
-  #     if row[:team_id] == team_id
-  #     shots << [row[:shots]]
-  #     end
-  #   end
-  #   shots.flatten.sum
-  # end
-
-
-  def least_accurate_team(season) #issue # 29 - passed dummy and spec harness
+  def least_accurate_team(season)
     @season_stats.least_accurate_team(season)
-    #   games_by_season
-  #   teams_with_goals_n_shots = Hash.new { |h,k| h[k] = [] }
-
-  #   game_teams.each do |row|
-  #     teams_with_goals_n_shots[row[:team_id]] = {"goals" => [], "shots" => []} if games_by_season[season.to_i].include?(row[:game_id])
-  #   end
-
-  #   game_teams.each do |row|
-  #     teams_with_goals_n_shots[row[:team_id]]["goals"] << row[:goals] and teams_with_goals_n_shots[row[:team_id]]["shots"] << row[:shots] if games_by_season[season.to_i].include?(row[:game_id])
-  #   end
-
-  #   teams_with_goals_n_shots.keys.each do |team_id|
-  #     teams_with_goals_n_shots[team_id] = teams_with_goals_n_shots[team_id]["goals"].sum.to_f / teams_with_goals_n_shots[team_id]["shots"].sum
-  #   end
-
-  #   team_by_id[teams_with_goals_n_shots.key(teams_with_goals_n_shots.values.min)]
   end
 
-  # def total_tackles_in_season_by_team #Helper method for #30 and #31
-  #   # Example: Output - {16=>299, 30=>165, 19=>161, 26=>174, 6=>271, 3=>179, 17=>219, 5=>150}
-  #   team_id_and_tackles_hash = Hash.new {|h,k| h[k] = {}}
-
-  #   games_by_season.each do |season, games|
-  #     @game_teams.each do |row|
-  #       if games.include?(row[:game_id])
-  #         if team_id_and_tackles_hash[season] == {} ||
-  #           team_id_and_tackles_hash[season][row[:team_id]].nil?
-  #             team_id_and_tackles_hash[season][row[:team_id]] = row[:tackles]
-  #         else
-  #           team_id_and_tackles_hash[season][row[:team_id]] += row[:tackles]
-  #         end
-  #       end
-  #     end
-  #   end
-  #   team_id_and_tackles_hash
-  # end
-
-  def most_tackles(season_id) #issue # 30 PASS
+  def most_tackles(season_id)
     @season_stats.most_tackles(season_id)
-    # team_by_id[total_tackles_in_season_by_team[season_id.to_i].key(total_tackles_in_season_by_team[season_id.to_i].values.max)]
-  end
-
-  def fewest_tackles(season_id)#issue # 31 PASS
+  end 
+  
+  def fewest_tackles(season_id)
     @season_stats.fewest_tackles(season_id)
-    # team_by_id[total_tackles_in_season_by_team[season_id.to_i].key(total_tackles_in_season_by_team[season_id.to_i].values.min)]
   end
 
-  def team_info(team_id) #issue # 23 - Pass
+  def team_info(team_id)
     @team_stat.team_info(team_id)
-  #     info = {
-  #     "team_id" => team_id,
-  #     "franchise_id" => 0,
-  #     "team_name" => 0,
-  #     "abbreviation" => 0,
-  #     "link" => 0
-  #             }
-
-  #     @teams.each do |row|
-  #       info["franchise_id"] = row[:franchiseid].to_s if row[:team_id] == team_id.to_i
-  #       info["team_name"] = row[:teamname] if row[:team_id] == team_id.to_i
-  #       info["abbreviation"] = row[:abbreviation] if row[:team_id] == team_id.to_i
-  #       info["link"] = row[:link] if row[:team_id] == team_id.to_i
-  #     end
-
-  #     info
   end
 
-  # def games_by_season # All game_ids sorted by season - helper method for issue #18
-  #   # {20122013=> [2012030221, 2012030222, 2012030223, 2012030224,
-  #   games_by_season = {}
-  #   @games.values_at(:game_id, :season).each do |game|
-  #     if games_by_season.include?(game[1])
-  #       games_by_season[game[1]] << game[0]
-  #     else
-  #       games_by_season[game[1]] = [game[0]]
-  #     end
-  #   end
-  #   games_by_season
-  # end
-
-  # def wins_by_team(team_id) # List of every game that was a win for a team - helper method for issue #18
-  #   # [[2013020252, 16], [2014030166, 16], [2016030151, 16], [2016030152, 16]]
-  #   # wins = []
-  #   # @games.each do |row|
-  #   #   if (row[:away_goals] > row[:home_goals] && row[:away_team_id] == team_id) ||
-  #   #     (row[:home_goals] < row[:away_goals] && row[:home_team_id] == team_id)
-  #   #     wins << [row[:game_id], team_id]
-  #   #   end
-  #   # end
-  #   # wins
-
-  #   # Option with full data set, but does not work with current dummy data
-  #   # (this could be made dynamic for win or loss):
-  #   #def results_by_team(team_id, win_loss)
-  #   result_by_team = @game_teams.values_at(:game_id, :team_id, :result).find_all do |game|
-  #     game[1] == team_id && game[2] == "WIN"
-  #   end
-  # end
-
-  # def games_by_team(team_id) # List of every game a team played - helper method for issue #18
-  #   # [[2013020252, 16], [2013020987, 16], [2014020903, 16], [2012020574, 16], [2014030161, 16],
-  #   games = []
-  #   @game_teams.each do |row|
-  #     games <<[row[:game_id], team_id] if (row[:team_id] == team_id)
-  #   end
-  #   games
-
-    # Option with full data set, but does not work with current dummy data:
-    # games_by_team = @game_teams.values_at(:game_id, :team_id, :result).find_all do |game|
-    #   game[1] == team_id
-    # end
-  # end
-
-  # def number_team_games_per_season(team_id) # Count of number of games a team played each season - helper method for issue #18
-  #   # {20122013=>1, 20132014=>2, 20142015=>7, 20162017=>4}
-  #   team_games_by_season = Hash.new{0}
-  #   games_by_season.each do |season, games|
-  #     games_by_team(team_id).each do |result_data|
-  #       if games.include?(result_data[0])
-  #         team_games_by_season[season] += 1.0
-  #       elsif team_games_by_season[season] == 0
-  #         team_games_by_season[season] = 0.0
-  #       end
-  #     end
-  #   end
-  #   team_games_by_season
-  # end
-
-  # def number_team_wins_per_season(team_id) # Count of number of games a team won each season -helper method for issue #18
-  #   # {20132014=>1, 20142015=>1, 20162017=>2}
-  #   wins_by_season = Hash.new{0}
-  #   games_by_season.each do |season, games|
-  #     wins_by_team(team_id).each do |result_data|
-  #       if games.include?(result_data[0])
-  #         wins_by_season[season] += 1.0
-  #       end
-  #     end
-  #     if wins_by_season[season] == 0
-  #       wins_by_season[season] = 0.0
-  #     end
-  #   end
-  #   wins_by_season
-  # end
-
-  # def season_win_percentage(team_id) # Percentage of won games per season by team - helper method for issue #18
-  #   # {20132014=>50.0, 20142015=>14.3, 20162017=>50.0}
-  #   win_percentage = Hash.new
-  #   number_team_games_per_season(team_id).each do |game_season, game_count|
-  #     number_team_wins_per_season(team_id).each do |wins_season, win_count|
-  #       if game_season == wins_season
-  #         if win_count == 0
-  #           percentage = 0.0
-  #         else
-  #           percentage = ((win_count/game_count.to_f) * 100).round(1)
-  #         end
-  #         win_percentage[game_season] = percentage
-  #       end
-  #     end
-  #   end
-  #   win_percentage
-  # end
-
-   def best_season(team_id) #issue # 18 - PASS
-   @team_stat.best_season(team_id)
-    # season_win_percentage(team_id.to_i).key(season_win_percentage(team_id.to_i).values.max).to_s
+  def best_season(team_id)
+    @team_stat.best_season(team_id)
   end
 
-  def worst_season(team_id)#issue # 25 - Fail due to not written
+  def worst_season(team_id)
     @team_stat.worst_season(team_id)
-    # season_win_percentage(team_id.to_i).key(season_win_percentage(team_id.to_i).values.min).to_s
   end
 
-  def average_win_percentage(team_id) #issue # 20
+  def average_win_percentage(team_id)
     @team_stat.average_win_percentage(team_id)
-    # (wins_by_team(team_id.to_i).count.to_f/games_by_team(team_id.to_i).count.to_f).round(2)
   end
 
-  def most_goals_scored(team_id) #issue # 27 pass
+  def most_goals_scored(team_id) 
     @team_stat.most_goals_scored(team_id)
-    # array_of_goals_for_specified_team = []
-
-    # @games.each do |row|
-    #   array_of_goals_for_specified_team << row[:away_goals] if team_id.to_i == row[:away_team_id]
-    #   array_of_goals_for_specified_team << row[:home_goals] if team_id.to_i == row[:home_team_id]
-    # end
-
-    # array_of_goals_for_specified_team.max()
   end
 
-  def fewest_goals_scored(team_id) #issue # 28 - Fail due to not written
+  def fewest_goals_scored(team_id) 
     @team_stat.fewest_goals_scored(team_id)
-    # array_of_goals_for_specified_team = []
-
-    #   @games.each do |row|
-    #     array_of_goals_for_specified_team << row[:away_goals] if team_id.to_i == row[:away_team_id]
-    #     array_of_goals_for_specified_team << row[:home_goals] if team_id.to_i == row[:home_team_id]
-    #   end
-
-    #   array_of_goals_for_specified_team.min()
   end
 
-  #issue # 29 - Fail due to not written
-  def favorite_opponent(team_id)#issue # 29
+  def favorite_opponent(team_id)
     @team_stat.favorite_opponent(team_id)
-    #   rival_opp = {}
-  #   rival_opp_wins = rival_wins(team_id)
-  #   rival_opp_games = rival_game(team_id)
-  #   rival_opp_games.each do | rogk, rogv |
-  #     rival_opp_wins.each do | rowk, rowv |
-  #       if rogk == rowk
-  #         rival_opp.merge!("#{rowk}" => (rowv.to_f / rogv.to_f))
-  #       elsif rival_opp_wins[rogk].nil?
-  #         rival_opp[rogk.to_s] = 0.0
-  #       end
-  #     end
-  #   end
-  #   rival_opp.each do |k, v|
-  #     if v == rival_opp.values.min
-  #       return team_by_id[k.to_i]
-  #     end
-  #   end
   end
 
-  # def rival_wins(team_id) #helper for #24 and possibly fave opp
-  #   rivals_wins = []
-  #   @games.each do |row|
-  #     if row[:away_team_id] == team_id.to_i
-  #       if row[:away_goals] < row[:home_goals]
-  #         rivals_wins << row[:home_team_id]
-  #       end
-  #     end
-  #     if row[:home_team_id] == team_id.to_i
-  #       if row[:home_goals] < row[:away_goals]
-  #         rivals_wins << row[:away_team_id]
-  #       end
-  #     end
-  #   end
-  #     rivals_wins_hash = rivals_wins.tally
-  #     rivals_wins_hash
-  # end
-
-  # def rival_game(team_id) #helper for #24 and possibly fave opp
-  #   rivals_games = []
-  #   games.each do |row|
-  #     if row[:home_team_id] == team_id.to_i
-  #     rivals_games << row[:away_team_id]
-  #     end
-  #     if row[:away_team_id] == team_id.to_i
-  #     rivals_games << row[:home_team_id]
-  #     end
-  #   end
-  #   rivals_games_hash = rivals_games.tally
-  #   rivals_games_hash
-  # end
-
-  def rival(team_id) #issue 24 - Fail due to not written
+  def rival(team_id)
     @team_stat.rival(team_id)
-    #   rival_opp = {}
-  #   rival_opp_wins = rival_wins(team_id)
-  #   rival_opp_games = rival_game(team_id)
-  #   rival_opp_games.each do | rogk, rogv |
-  #     rival_opp_wins.each do | rowk, rowv |
-  #       if rogk == rowk
-  #         rival_opp.merge!("#{rowk}" => (rowv.to_f / rogv.to_f))
-  #       elsif rival_opp_wins[rogk].nil?
-  #         rival_opp[rogk.to_s] = 0.0
-  #       end
-  #     end
-  #   end
-  #   rival_opp.each do |k, v|
-  #     if v == rival_opp.values.max
-  #       return team_by_id[k.to_i]
-  #     end
-  #   end
   end
 end
