@@ -37,16 +37,15 @@ describe Games do
 
   describe 'Test Game Stats Helpers' do
     it "total_scores_by_game" do
-      @game_1.highest_total_score
-      expect(@game_1.total_scores_by_game).to be_a_kind_of(Array)
+      expect(@game_stats.total_scores_by_game).to be_a_kind_of(Array)
     end
 
     it "home_wins" do
-      expect(@stat_tracker.home_wins).to eq(24)
+      expect(@game_stats.home_wins).to eq(24)
     end
 
     it "home_games" do
-      expect(@stat_tracker.home_games).to eq(40)
+      expect(@game_stats.home_games).to eq(40)
     end
   end
 end
