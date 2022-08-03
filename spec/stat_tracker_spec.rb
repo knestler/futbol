@@ -52,8 +52,8 @@ describe StatTracker do
       expect(@stat_tracker.percentage_ties).to eq(0.0)
     end
 
-    it 'average goals' do
-      expect(@stat_tracker.average_goals_per_game).to eq(3.90)
+    it 'average goals' do 
+      expect(@stat_tracker.average_goals_per_game).to eq(3.90) 
     end
 
     it 'returns hash with season name and average goals for each season ' do
