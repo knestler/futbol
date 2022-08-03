@@ -1,11 +1,11 @@
 require_relative 'details_loader'
 require_relative 'reusable'
+
 class SeasonStats < DetailsLoader
   include Reusables
 
   def initialize(games, teams, game_teams)
     super(games, teams, game_teams)
-    @details = DetailsLoader.new(games, teams, game_teams)
   end
 
   def winningest_coach(season) 
@@ -38,15 +38,15 @@ class SeasonStats < DetailsLoader
       end
       team_totals_for_season
     end
-  end 
+  end
 
-  def seasonal_team_accuracy(season_id) #Helper
+  def seasonal_team_accuracy(season_id)
     total_team_shots_and_goals[season_id].transform_values do |team_shots_and_goals|
       team_shots_and_goals["goals"].to_f / team_shots_and_goals["shots"]
     end
-  end 
+  end
 
-  def most_accurate_team(season_id) 
+  def most_accurate_team(season_id)
     team_by_id[seasonal_team_accuracy(season_id.to_i).key(seasonal_team_accuracy(season_id.to_i).values.max)]
   end
 
@@ -87,7 +87,7 @@ class SeasonStats < DetailsLoader
     team_id_and_tackles_hash
   end
 
-  def most_tackles(season_id) 
+  def most_tackles(season_id)
     team_by_id[total_tackles_in_season_by_team[season_id.to_i].key(total_tackles_in_season_by_team[season_id.to_i].values.max)]
   end
 
