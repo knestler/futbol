@@ -20,8 +20,8 @@ describe DetailsLoader do
 
   end
 
-  describe 'Game Class initializes' do
-    it 'Game Class exists'do
+  describe 'Details Loader initializes' do
+    it 'Details Loader exists'do
       expect(@details).to be_an_instance_of(DetailsLoader)
       expect(@details).to be_kind_of(CsvLoader)
     end
