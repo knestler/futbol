@@ -91,8 +91,8 @@ describe StatTracker do
       expect(@stat_tracker.percentage_ties).to eq(0.0)
     end
 
-    it 'average goals' do #FAIL - Need to make this test eq 0.99 not whole numbers
-      expect(@stat_tracker.average_goals_per_game).to eq(3.90) #added 3.90 to match google doc prev: 3.9
+    it 'average goals' do 
+      expect(@stat_tracker.average_goals_per_game).to eq(3.90) 
     end
 
     it 'returns hash with season name and average goals for each season ' do #Pass
@@ -153,14 +153,6 @@ describe StatTracker do
 
     it 'can show name of the team with the worst ratio of shots to goals for the season' do #passed dummy test and spec harness
       expect(@stat_tracker.least_accurate_team("20122013")).to eq("Sporting Kansas City")
-    end
-
-    xit 'can count goals' do #Helper test
-      expect(@stat_tracker.goals_by_team(16)).to eq(31)
-    end
-
-    xit 'can count shots' do #Helper test??
-      expect(@stat_tracker.shots_by_team(16)).to eq(127)
     end
 
     it 'can show name of the team with most tackles in the season' do
