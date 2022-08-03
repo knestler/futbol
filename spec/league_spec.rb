@@ -21,8 +21,8 @@ describe League do
 
   end
 
-  describe 'Game Class initializes' do
-    it 'Game Class exists'do
+  describe 'League Class initializes' do
+    it 'League Class exists'do
       expect(@league_stats).to be_an_instance_of(League)
       expect(@league_stats).to be_kind_of(DetailsLoader)
       expect(@league_stats).to be_kind_of(CsvLoader)
